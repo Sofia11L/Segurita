@@ -1,0 +1,270 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+  <!-- EF Runtime content -->
+  <edmx:Runtime>
+    <!-- SSDL content -->
+    <edmx:StorageModels>
+      <Schema Namespace="SLerdoSeguritasModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <EntityType Name="Clientes">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Nombre" Type="nvarchar" MaxLength="100" Nullable="false" />
+          <Property Name="FechaCreacion" Type="datetime" Nullable="false" />
+          <Property Name="FechaModificacion" Type="datetime" />
+        </EntityType>
+        <EntityType Name="Coberturas">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Descripcion" Type="nvarchar" MaxLength="100" Nullable="false" />
+          <Property Name="FechaCreacion" Type="datetime" Nullable="false" />
+          <Property Name="FechaModificacion" Type="datetime" />
+        </EntityType>
+        <EntityType Name="PlanCobertura">
+          <Key>
+            <PropertyRef Name="PlanId" />
+            <PropertyRef Name="CoberturaId" />
+          </Key>
+          <Property Name="PlanId" Type="int" Nullable="false" />
+          <Property Name="CoberturaId" Type="int" Nullable="false" />
+          <Property Name="FechaCreacion" Type="datetime" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Planes">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Descripcion" Type="nvarchar" MaxLength="100" Nullable="false" />
+          <Property Name="ClienteId" Type="int" Nullable="false" />
+          <Property Name="FechaCreacion" Type="datetime" Nullable="false" />
+          <Property Name="FechaModificacion" Type="datetime" />
+        </EntityType>
+        <Association Name="FK__PlanCober__Cober__2F10007B">
+          <End Role="Coberturas" Type="Self.Coberturas" Multiplicity="1" />
+          <End Role="PlanCobertura" Type="Self.PlanCobertura" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Coberturas">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="PlanCobertura">
+              <PropertyRef Name="CoberturaId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__PlanCober__PlanI__2E1BDC42">
+          <End Role="Planes" Type="Self.Planes" Multiplicity="1" />
+          <End Role="PlanCobertura" Type="Self.PlanCobertura" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Planes">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="PlanCobertura">
+              <PropertyRef Name="PlanId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__Planes__ClienteI__276EDEB3">
+          <End Role="Clientes" Type="Self.Clientes" Multiplicity="1" />
+          <End Role="Planes" Type="Self.Planes" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Clientes">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Planes">
+              <PropertyRef Name="ClienteId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="SLerdoSeguritasModelStoreContainer">
+          <EntitySet Name="Clientes" EntityType="Self.Clientes" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Coberturas" EntityType="Self.Coberturas" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="PlanCobertura" EntityType="Self.PlanCobertura" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Planes" EntityType="Self.Planes" Schema="dbo" store:Type="Tables" />
+          <AssociationSet Name="FK__PlanCober__Cober__2F10007B" Association="Self.FK__PlanCober__Cober__2F10007B">
+            <End Role="Coberturas" EntitySet="Coberturas" />
+            <End Role="PlanCobertura" EntitySet="PlanCobertura" />
+          </AssociationSet>
+          <AssociationSet Name="FK__PlanCober__PlanI__2E1BDC42" Association="Self.FK__PlanCober__PlanI__2E1BDC42">
+            <End Role="Planes" EntitySet="Planes" />
+            <End Role="PlanCobertura" EntitySet="PlanCobertura" />
+          </AssociationSet>
+          <AssociationSet Name="FK__Planes__ClienteI__276EDEB3" Association="Self.FK__Planes__ClienteI__276EDEB3">
+            <End Role="Clientes" EntitySet="Clientes" />
+            <End Role="Planes" EntitySet="Planes" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema>
+    </edmx:StorageModels>
+    <!-- CSDL content -->
+    <edmx:ConceptualModels>
+      <Schema Namespace="SLerdoSeguritasModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+        <EntityType Name="Cliente">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Nombre" Type="String" MaxLength="100" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="FechaCreacion" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="FechaModificacion" Type="DateTime" Precision="3" />
+          <NavigationProperty Name="Planes" Relationship="Self.FK__Planes__ClienteI__276EDEB3" FromRole="Clientes" ToRole="Planes" />
+        </EntityType>
+        <EntityType Name="Cobertura">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Descripcion" Type="String" MaxLength="100" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="FechaCreacion" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="FechaModificacion" Type="DateTime" Precision="3" />
+          <NavigationProperty Name="PlanCoberturas" Relationship="Self.FK__PlanCober__Cober__2F10007B" FromRole="Coberturas" ToRole="PlanCobertura" />
+        </EntityType>
+        <EntityType Name="PlanCobertura">
+          <Key>
+            <PropertyRef Name="PlanId" />
+            <PropertyRef Name="CoberturaId" />
+          </Key>
+          <Property Name="PlanId" Type="Int32" Nullable="false" />
+          <Property Name="CoberturaId" Type="Int32" Nullable="false" />
+          <Property Name="FechaCreacion" Type="DateTime" Nullable="false" Precision="3" />
+          <NavigationProperty Name="Cobertura" Relationship="Self.FK__PlanCober__Cober__2F10007B" FromRole="PlanCobertura" ToRole="Coberturas" />
+          <NavigationProperty Name="Plane" Relationship="Self.FK__PlanCober__PlanI__2E1BDC42" FromRole="PlanCobertura" ToRole="Planes" />
+        </EntityType>
+        <EntityType Name="Plane">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Descripcion" Type="String" MaxLength="100" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="ClienteId" Type="Int32" Nullable="false" />
+          <Property Name="FechaCreacion" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="FechaModificacion" Type="DateTime" Precision="3" />
+          <NavigationProperty Name="Cliente" Relationship="Self.FK__Planes__ClienteI__276EDEB3" FromRole="Planes" ToRole="Clientes" />
+          <NavigationProperty Name="PlanCoberturas" Relationship="Self.FK__PlanCober__PlanI__2E1BDC42" FromRole="Planes" ToRole="PlanCobertura" />
+        </EntityType>
+        <Association Name="FK__Planes__ClienteI__276EDEB3">
+          <End Role="Clientes" Type="Self.Cliente" Multiplicity="1" />
+          <End Role="Planes" Type="Self.Plane" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Clientes">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Planes">
+              <PropertyRef Name="ClienteId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__PlanCober__Cober__2F10007B">
+          <End Role="Coberturas" Type="Self.Cobertura" Multiplicity="1" />
+          <End Role="PlanCobertura" Type="Self.PlanCobertura" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Coberturas">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="PlanCobertura">
+              <PropertyRef Name="CoberturaId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__PlanCober__PlanI__2E1BDC42">
+          <End Role="Planes" Type="Self.Plane" Multiplicity="1" />
+          <End Role="PlanCobertura" Type="Self.PlanCobertura" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Planes">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="PlanCobertura">
+              <PropertyRef Name="PlanId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="SLerdoSeguritasEntities" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="Clientes" EntityType="Self.Cliente" />
+          <EntitySet Name="Coberturas" EntityType="Self.Cobertura" />
+          <EntitySet Name="PlanCoberturas" EntityType="Self.PlanCobertura" />
+          <EntitySet Name="Planes" EntityType="Self.Plane" />
+          <AssociationSet Name="FK__Planes__ClienteI__276EDEB3" Association="Self.FK__Planes__ClienteI__276EDEB3">
+            <End Role="Clientes" EntitySet="Clientes" />
+            <End Role="Planes" EntitySet="Planes" />
+          </AssociationSet>
+          <AssociationSet Name="FK__PlanCober__Cober__2F10007B" Association="Self.FK__PlanCober__Cober__2F10007B">
+            <End Role="Coberturas" EntitySet="Coberturas" />
+            <End Role="PlanCobertura" EntitySet="PlanCoberturas" />
+          </AssociationSet>
+          <AssociationSet Name="FK__PlanCober__PlanI__2E1BDC42" Association="Self.FK__PlanCober__PlanI__2E1BDC42">
+            <End Role="Planes" EntitySet="Planes" />
+            <End Role="PlanCobertura" EntitySet="PlanCoberturas" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema>
+    </edmx:ConceptualModels>
+    <!-- C-S mapping content -->
+    <edmx:Mappings>
+      <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+        <EntityContainerMapping StorageEntityContainer="SLerdoSeguritasModelStoreContainer" CdmEntityContainer="SLerdoSeguritasEntities">
+          <EntitySetMapping Name="Clientes">
+            <EntityTypeMapping TypeName="SLerdoSeguritasModel.Cliente">
+              <MappingFragment StoreEntitySet="Clientes">
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="Nombre" ColumnName="Nombre" />
+                <ScalarProperty Name="FechaCreacion" ColumnName="FechaCreacion" />
+                <ScalarProperty Name="FechaModificacion" ColumnName="FechaModificacion" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Coberturas">
+            <EntityTypeMapping TypeName="SLerdoSeguritasModel.Cobertura">
+              <MappingFragment StoreEntitySet="Coberturas">
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="Descripcion" ColumnName="Descripcion" />
+                <ScalarProperty Name="FechaCreacion" ColumnName="FechaCreacion" />
+                <ScalarProperty Name="FechaModificacion" ColumnName="FechaModificacion" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="PlanCoberturas">
+            <EntityTypeMapping TypeName="SLerdoSeguritasModel.PlanCobertura">
+              <MappingFragment StoreEntitySet="PlanCobertura">
+                <ScalarProperty Name="PlanId" ColumnName="PlanId" />
+                <ScalarProperty Name="CoberturaId" ColumnName="CoberturaId" />
+                <ScalarProperty Name="FechaCreacion" ColumnName="FechaCreacion" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Planes">
+            <EntityTypeMapping TypeName="SLerdoSeguritasModel.Plane">
+              <MappingFragment StoreEntitySet="Planes">
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="Descripcion" ColumnName="Descripcion" />
+                <ScalarProperty Name="ClienteId" ColumnName="ClienteId" />
+                <ScalarProperty Name="FechaCreacion" ColumnName="FechaCreacion" />
+                <ScalarProperty Name="FechaModificacion" ColumnName="FechaModificacion" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+        </EntityContainerMapping>
+      </Mapping>
+    </edmx:Mappings>
+  </edmx:Runtime>
+  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <Connection>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </DesignerInfoPropertySet>
+    </Connection>
+    <Options>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="ValidateOnBuild" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="true" />
+        <DesignerProperty Name="IncludeForeignKeysInModel" Value="true" />
+        <DesignerProperty Name="UseLegacyProvider" Value="false" />
+        <DesignerProperty Name="CodeGenerationStrategy" Value="None" />
+      </DesignerInfoPropertySet>
+    </Options>
+    <!-- Diagram content (shape and connector positions) -->
+    <Diagrams></Diagrams>
+  </Designer>
+</edmx:Edmx>

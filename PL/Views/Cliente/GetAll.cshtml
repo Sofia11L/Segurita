@@ -1,0 +1,205 @@
+﻿@{
+    ViewBag.Title = "Clientes";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>Clientes</h2>
+
+<input type="hidden" id="Id" value="0" />
+
+<div class="form-group">
+    <label for="Nombre">Nombre del cliente</label>
+    <input type="text" id="Nombre" class="form-control" maxlength="100" />
+</div>
+
+<button type="button" id="btnGuardar" class="btn btn-success">
+    Guardar
+</button>
+
+<button type="button" id="btnCancelar" class="btn btn-secondary">
+    Cancelar
+</button>
+
+<hr />
+
+<p id="mensaje"></p>
+
+<div class="table-responsive">
+    <table class="table table-bordered">
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>Nombre</th>
+                <th>Fecha de creación</th>
+                <th>Fecha de modificación</th>
+                <th>Editar</th>
+                <th>Eliminar</th>
+            </tr>
+        </thead>
+        <tbody id="tablaClientes">
+        </tbody>
+    </table>
+</div>
+
+@section scripts {
+    <script>
+        var url = '@Url.Content("~/api/clientes")';
+
+        $(document).ready(function () {
+            consultar();
+
+            $("#btnGuardar").click(function () {
+                guardar();
+            });
+
+            $("#btnCancelar").click(function () {
+                $("#Id").val("0");
+                $("#Nombre").val("");
+                $("#btnGuardar").text("Guardar");
+                $("#mensaje").text("");
+            });
+        });
+
+        function consultar() {
+            $.ajax({
+                url: url,
+                type: "GET",
+                dataType: "json",
+                success: function (clientes) {
+                    $("#tablaClientes").empty();
+
+                    if (clientes.length == 0) {
+                        $("#mensaje").text("No hay clientes registrados.");
+                    }
+
+                    for (var i = 0; i < clientes.length; i++) {
+                        var cliente = clientes[i];
+                        var id = Number(cliente.Id);
+
+                        var fila = $("<tr>");
+
+                        fila.append($("<td>").text(id));
+                        fila.append($("<td>").text(cliente.Nombre));
+                        fila.append($("<td>").text(fecha(cliente.FechaCreacion)));
+                        fila.append($("<td>").text(fecha(cliente.FechaModificacion)));
+
+                        fila.append(
+                            '<td><button type="button" class="btn btn-primary" ' +
+                            'onclick="editar(' + id + ')">Editar</button></td>'
+                        );
+
+                        fila.append(
+                            '<td><button type="button" class="btn btn-danger" ' +
+                            'onclick="eliminar(' + id + ', this)">Eliminar</button></td>'
+                        );
+
+                        $("#tablaClientes").append(fila);
+                    }
+                },
+                error: function () {
+                    $("#mensaje").text("No se pudieron consultar los clientes.");
+                }
+            });
+        }
+
+        function guardar() {
+            var id = $("#Id").val();
+            var nombre = $("#Nombre").val().trim();
+
+            if (nombre == "") {
+                $("#mensaje").text("Ingresa el nombre del cliente.");
+                return;
+            }
+
+            if (nombre.length > 100) {
+                $("#mensaje").text("El nombre debe tener máximo 100 caracteres.");
+                return;
+            }
+
+            var direccion = url;
+            var metodo = "POST";
+
+            if (id != "0") {
+                direccion = url + "/" + id;
+                metodo = "PUT";
+            }
+
+            $("#btnGuardar").prop("disabled", true);
+
+            $.ajax({
+                url: direccion,
+                type: metodo,
+                contentType: "application/json",
+                data: JSON.stringify({ Nombre: nombre }),
+                success: function (mensaje) {
+                    alert(mensaje);
+                    location.reload();
+                },
+                error: function (respuesta) {
+                    mostrarError(respuesta);
+                },
+                complete: function () {
+                    $("#btnGuardar").prop("disabled", false);
+                }
+            });
+        }
+
+        function editar(id) {
+            $.ajax({
+                url: url + "/" + id,
+                type: "GET",
+                dataType: "json",
+                success: function (cliente) {
+                    $("#Id").val(cliente.Id);
+                    $("#Nombre").val(cliente.Nombre);
+                    $("#btnGuardar").text("Actualizar");
+                    $("#mensaje").text("");
+                },
+                error: function () {
+                    $("#mensaje").text("No se pudo consultar el cliente.");
+                }
+            });
+        }
+
+        function eliminar(id, boton) {
+            if (!confirm("¿Seguro que deseas eliminar este cliente?")) {
+                return;
+            }
+
+            $(boton).prop("disabled", true);
+
+            $.ajax({
+                url: url + "/" + id,
+                type: "DELETE",
+                success: function (mensaje) {
+                    alert(mensaje);
+                    location.reload();
+                },
+                error: function (respuesta) {
+                    mostrarError(respuesta);
+                },
+                complete: function () {
+                    $(boton).prop("disabled", false);
+                }
+            });
+        }
+
+        function mostrarError(respuesta) {
+            var mensaje = "No se pudo realizar la operación.";
+
+            if (respuesta.responseJSON && respuesta.responseJSON.Message) {
+                mensaje = respuesta.responseJSON.Message;
+            }
+
+            $("#mensaje").text(mensaje);
+        }
+
+        function fecha(valor) {
+            if (valor == null) {
+                return "Sin modificación";
+            }
+
+            return new Date(valor).toLocaleString();
+        }
+    </script>
+}
