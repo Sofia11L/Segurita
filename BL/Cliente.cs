@@ -103,7 +103,7 @@ namespace BL
             {
                 using (SqlConnection context = new SqlConnection(DL.Conexion.GetStringConnection()))
                 {
-                    string query = @"SELECT Id, Nombre, FechaCreacion, FechaModificacion FROM Clientesn WHERE Id = @Id";
+                    string query = @"SELECT Id, Nombre, FechaCreacion, FechaModificacion FROM Clientes WHERE Id = @Id";
 
                     using (SqlCommand cmd = new SqlCommand(query, context))
                     {
